@@ -1,0 +1,3 @@
+development:
+  name: php-menage-dev
+  host: localhost
