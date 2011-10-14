@@ -27,7 +27,12 @@ class BaseMongo {
   }
   
   function __set($name, $value) {
-    $this->$name = $value;
+    switch($name) {
+      case preg_match('/\[\d*i\]/', $name):
+        break;
+      default:
+        $this->$name = $value;
+    }
   }
   
   public function collection() {

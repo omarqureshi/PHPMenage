@@ -10,16 +10,33 @@
   
   /* Session Handling */
   
+  /* Controllers */
+  
+  include("controllers/base.php");
+  include("controllers/home.php");
+  include("controllers/session.php");
+  
   /* Router */
-  // echo $_SERVER["REQUEST_METHOD"];
   
-  /* Debug */
+  include("config/router.php");
   
-  $a = new Content();
-  $a->title = "Test";
-  $a->save();
-  $a->title = "Changed";
-  $a->save();
-  var_dump($a);
-
+  $r = new Router();
+  $r->map('/', array('controller' => 'home', 'action' => 'index'));
+  if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    $r->map('/login', array('controller' => 'session', 'action' => 'new'));
+  }
+  
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $r->map('/login', array('controller' => 'session', 'action' => 'create'));
+  }
+  
+  
+  
+  
+  $r->execute();
+  $controller_name = ($r->controller_name . "Controller");
+  $action = $r->action;
+  
+  $controller_name::$action();
+  
 ?>

@@ -4,12 +4,9 @@
     
     private static $instance;
 
-    private function __construct()
-    {
-    }
+    private function __construct(){}
 
-    public static function database()
-    {
+    public static function database() {
       if (!isset(self::$instance)) {
         $m = new Mongo(self::connectionString());
         self::$instance = $m->selectDB(self::name());
@@ -17,13 +14,11 @@
       return self::$instance;
     }
     
-    public function __clone()
-    {
+    public function __clone() {
       trigger_error('Clone is not allowed.', E_USER_ERROR);
     }
 
-    public function __wakeup()
-    {
+    public function __wakeup() {
       trigger_error('Unserializing is not allowed.', E_USER_ERROR);
     }
     
