@@ -2,10 +2,9 @@
 
 class SessionController extends BaseController {
   
-  function new() {
+  function _create($params=array()) {
     $presenter = self::initializePresenter();
-    $template = "views/session/new.php";
-    include("views/layouts/application.php");
+    self::return_to($params);
   }
   
 }

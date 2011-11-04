@@ -1,10 +1,10 @@
 <?php
 
-class HomeController extends BaseController {
+class MaintenanceController extends BaseController {
   
-  function _index($params=array()) {
+  function four_oh_four($params=array()) {
     $presenter = self::initializePresenter();
-    $template = "views/home/index.php";
+    $template = "views/maintenance/404.php";
     $presenter["full_width"] = true;
     include("views/layouts/application.php");
   }

@@ -2,14 +2,20 @@
 
 class BaseMongo {
   protected $id;
+  protected $virtual;
+  protected $created_at;
+  protected $updated_at;
   public $errors;
 
-  function __construct ($attList = array()) {
+  function __construct ($attList=array()) {
     $reflection = new ReflectionObject($this);
     foreach ($attList as $attName => $attValue) {
       $attObj = $reflection->getProperty($attName);
       $attObj->setAccessible(true);
       $attObj->setValue($this, $attValue);
+    }
+    if (!isset($this->virtual)) {
+      $this->virtual = array();
     }
   }
   

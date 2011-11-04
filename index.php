@@ -7,36 +7,53 @@
   include("models/core/errors.php");
   include("models/core/base_mongo.php");
   include("models/core/content.php");
+  include("models/core/user.php");
+  include("lib/extensions.php");
   
   /* Session Handling */
   
   /* Controllers */
   
   include("controllers/base.php");
+  include("controllers/maintenance.php");
   include("controllers/home.php");
   include("controllers/session.php");
+  include("controllers/users.php");
+  
+  /* Form builder */
+  
+  include("config/form_builder.php");
   
   /* Router */
   
   include("config/router.php");
   
   $r = new Router();
-  $r->map('/', array('controller' => 'home', 'action' => 'index'));
-  if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    $r->map('/login', array('controller' => 'session', 'action' => 'new'));
-  }
+
+  /* Restful resources */
   
+  $r->resources("users");
+  
+  /* Custom routes */
+  
+  if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    $r->map('/', array('controller' => 'home', 'action' => 'index'));
+    $r->map('/profile', array('controller' => 'users', 'action' => 'profile'));
+  }
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $r->map('/login', array('controller' => 'session', 'action' => 'create'));
+    $r->map('/logout', array('controller' => 'session', 'action' => 'destroy'));
   }
-  
-  
-  
   
   $r->execute();
   $controller_name = ($r->controller_name . "Controller");
-  $action = $r->action;
-  
-  $controller_name::$action();
-  
+  $action = "_" . $r->action;
+
+  if ($r->controller_name && $r->action) {
+    $controller_name::$action($r->params);
+  } else {
+    header("Status: 404 Not Found");
+    MaintenanceController::four_oh_four($r->params);
+  }
+
 ?>

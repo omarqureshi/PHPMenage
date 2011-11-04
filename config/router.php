@@ -1,8 +1,5 @@
 <?php
 
-define('ROUTER_DEFAULT_CONTROLLER', 'home');
-define('ROUTER_DEFAULT_ACTION', 'index');
- 
 class Router {
   public $request_uri;
   public $routes;
@@ -11,6 +8,9 @@ class Router {
   public $params;
   public $method;
   public $route_found = false;
+  
+  const default_controller = "home";
+  const default_action = "index";
  
   public function __construct() {
     $request = $_SERVER['REQUEST_URI'];
@@ -24,6 +24,33 @@ class Router {
  
   public function map($rule, $target=array(), $conditions=array()) {
     $this->routes[$rule] = new Route($rule, $this->request_uri, $target, $conditions);
+  }
+  
+  public function resources($name, $nests_on=array()) {
+    if (empty($nests_on)) {
+      if ($_SERVER["REQUEST_METHOD"] == "GET") {
+        $this->map("/$name", array('controller' => 'users', 'action' => 'index'));
+        $this->map("/$name/new", array('controller' => 'users', 'action' => 'new'));
+        $this->map("/$name/edit/:id", array('controller' => 'users', 'action' => 'edit'));
+        $this->map("/$name/:id", array('controller' => 'users', 'action' => 'show'));
+      }
+      if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $this->map("/$name", array('controller' => 'users', 'action' => 'create'));
+      }
+    } else {
+      
+    }
+    
+  }
+  
+  public function resource($name) {
+    if ($_SERVER["REQUEST_METHOD"] == "GET") {
+      $this->map("/$name", array('controller' => 'users', 'action' => 'show'));
+      $this->map("/$name/new", array('controller' => 'users', 'action' => 'new'));
+    }
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      $this->map("/$name", array('controller' => 'users', 'action' => 'create'));
+    }
   }
  
   public function default_routes() {
@@ -46,8 +73,8 @@ class Router {
     }
     $this->params = array_merge($params, $_GET);
  
-    if (empty($this->controller)) $this->controller = ROUTER_DEFAULT_CONTROLLER;
-    if (empty($this->action)) $this->action = ROUTER_DEFAULT_ACTION;
+    if (empty($this->controller)) $this->controller = default_controller;
+    if (empty($this->action)) $this->action = default_action;
     if (empty($this->id)) $this->id = null;
  
     $w = explode('_', $this->controller);

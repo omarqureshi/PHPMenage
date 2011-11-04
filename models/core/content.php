@@ -29,10 +29,8 @@ class Content extends BaseMongo {
   function __set($name, $value) {
     switch($name) {
       case preg_match('/\[\d*i\]/', $name):
-        
       case "start_date":
       case "end_date":
-        
       default:
         parent::__set($name, $value);
     }

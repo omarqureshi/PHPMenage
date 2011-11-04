@@ -60,6 +60,14 @@
       .topbar .btn {
         border: 0;
       }
+      
+      span.topbar-connector {
+        color: #808080;
+        line-height: 18px;
+        display: block;
+        float: left;
+        padding: 10px 0px 10px 10px;
+      }
 
     </style>
 
@@ -75,17 +83,23 @@
     <div class="topbar">
       <div class="fill">
         <div class="container">
-          <a class="brand" href="/">Project name</a>
+          <a class="brand" href="/"><?php echo $presenter["application_name"] ?></a>
           <ul class="nav">
             <li class="active"><a href="/">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
-          <form action="" class="pull-right">
-            <input class="input-small" type="text" placeholder="Email">
-            <input class="input-small" type="password" placeholder="Password">
-            <button class="btn" type="submit">Sign in</button>
-          </form>
+          <div class="pull-right">
+            <form action="/login?return_to=<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
+              <input class="input-small" type="text" placeholder="Email">
+              <input class="input-small" type="password" placeholder="Password">
+              <button class="btn" type="submit">Sign in</button>
+            </form>
+            <span class="topbar-connector"> or </span>
+            <ul class="secondary-nav">
+              <li class><a href="/users/new">Register</a></li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -94,20 +108,22 @@
 
       <div class="content">
         <div class="page-header">
-          <h1><?php echo $presenter["application_name"] ?> <small>Consumable content on the cloud</small></h1>
+          <h1><?php echo $presenter["page_name"] ?> <small>Consumable content on the cloud</small></h1>
         </div>
         <div class="row">
           <?php if ($presenter["full_width"]) { ?>
             <div class="span16">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              <?php include($template); ?>
             </div>
           <?php } else { ?>
             <div class="span10">
-              <h2><?php include($template); ?></h2>
+              <?php include($template); ?>
             </div>
-            <div class="span6">
-              <h3>Secondary content</h3>
-            </div>
+            <?php if (isset($right_rail)) { ?>
+              <div class="span6">
+                <?php include($right_rail); ?>
+              </div>
+            <?php } ?>
           <?php } ?>
         </div>
       </div>
