@@ -1,16 +1,21 @@
 <?php
-
+  
+  /* Session Handling */
+  session_start();
+  
   /* Database */
   include("config/connection.php");
+  
+  /* Extensions */
+  include("lib/extensions.php");
+  include("lib/bcrypt.php");
+  include("lib/flash.php");
   
   /* Core Classes */
   include("models/core/errors.php");
   include("models/core/base_mongo.php");
   include("models/core/content.php");
   include("models/core/user.php");
-  include("lib/extensions.php");
-  
-  /* Session Handling */
   
   /* Controllers */
   
@@ -48,7 +53,7 @@
   $r->execute();
   $controller_name = ($r->controller_name . "Controller");
   $action = "_" . $r->action;
-
+  
   if ($r->controller_name && $r->action) {
     $controller_name::$action($r->params);
   } else {

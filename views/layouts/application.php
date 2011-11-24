@@ -13,6 +13,10 @@
 
     <!-- Le styles -->
     <link href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.js" type="text/javascript"></script>
+    <script src="/assets/javascripts/menage.js" type="text/javascript"></script>
+
+    
     <style type="text/css">
       /* Override some defaults */
       html, body {
@@ -44,12 +48,7 @@
         padding: 20px 20px 10px;
         margin: -20px -20px 20px;
       }
-
-      /* Styles you shouldn't keep as they are for displaying this base example only */
-      .content .span10,
-      .content .span4 {
-        min-height: 500px;
-      }
+      
       /* Give a quick and non-cross-browser friendly divider */
       .content .span4 {
         margin-left: 0;
@@ -72,10 +71,10 @@
     </style>
 
     <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="images/favicon.ico">
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/images/apple-touch-icon-114x114.png">
   </head>
 
   <body>
@@ -90,15 +89,21 @@
             <li><a href="#contact">Contact</a></li>
           </ul>
           <div class="pull-right">
-            <form action="/login?return_to=<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
-              <input class="input-small" type="text" placeholder="Email">
-              <input class="input-small" type="password" placeholder="Password">
-              <button class="btn" type="submit">Sign in</button>
-            </form>
-            <span class="topbar-connector"> or </span>
-            <ul class="secondary-nav">
-              <li class><a href="/users/new">Register</a></li>
-            </ul>
+            <?php if (isset($current_user)) { ?>
+              <ul class="secondary-nav">
+                <li><a href="/users/<?php echo $current_user->id; ?>/edit"><?php echo $current_user->name; ?></a></li>
+              </ul>
+            <?php } else { ?>
+              <form action="/login?return_to=<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
+                <input class="input-small" type="text" placeholder="Email" name="email">
+                <input class="input-small" type="password" placeholder="Password" name="password">
+                <button class="btn" type="submit">Sign in</button>
+              </form>
+              <span class="topbar-connector"> or </span>
+              <ul class="secondary-nav">
+                <li><a href="/users/new">Register</a></li>
+              </ul>
+            <?php } ?>
           </div>
         </div>
       </div>
@@ -109,7 +114,18 @@
       <div class="content">
         <div class="page-header">
           <h1><?php echo $presenter["page_name"] ?> <small>Consumable content on the cloud</small></h1>
+          <?php foreach (Flash::$messages as $type => $messages) { ?>
+            <?php if (count($messages) > 0) { ?>
+              <div class="alert-message block-message <?php echo $type ?>">
+                <a class="close" href="">x</a>
+                <?php foreach ($messages as $message) { ?>
+                  <p><?php echo $message ?></p>
+                <?php } ?>
+              </div>
+            <?php } ?>
+          <?php } ?>
         </div>
+        
         <div class="row">
           <?php if ($presenter["full_width"]) { ?>
             <div class="span16">

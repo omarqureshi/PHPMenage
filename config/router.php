@@ -31,7 +31,7 @@ class Router {
       if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $this->map("/$name", array('controller' => 'users', 'action' => 'index'));
         $this->map("/$name/new", array('controller' => 'users', 'action' => 'new'));
-        $this->map("/$name/edit/:id", array('controller' => 'users', 'action' => 'edit'));
+        $this->map("/$name/:id/edit", array('controller' => 'users', 'action' => 'edit'));
         $this->map("/$name/:id", array('controller' => 'users', 'action' => 'show'));
       }
       if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -63,16 +63,17 @@ class Router {
     $this->route_found = true;
     $params = $route->params;
     if (array_key_exists('controller', $params)) {
-      $this->controller = $params['controller']; unset($params['controller']);
+      $this->controller = $params['controller'];
     }
     if (array_key_exists('action', $params)) {
-      $this->action = $params['action']; unset($params['action']);
+      $this->action = $params['action'];
     }
     if (array_key_exists('id', $params)) {
-      $this->id = $params['id']; unset($params['id']);
+      $this->id = $params['id'];
     }
+    
     $this->params = array_merge($params, $_GET);
- 
+    
     if (empty($this->controller)) $this->controller = default_controller;
     if (empty($this->action)) $this->action = default_action;
     if (empty($this->id)) $this->id = null;
@@ -116,7 +117,7 @@ class Route {
       foreach($target as $key => $value) $this->params[$key] = $value;
       $this->is_matched = true;
     }
- 
+     
     unset($p_names); unset($p_values);
   }
  

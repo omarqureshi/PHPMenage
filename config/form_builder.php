@@ -25,46 +25,46 @@ class CheckboxFieldElement extends FormElement {
   
   public function toHTML() {
     $input =  "<input type=checkbox name={$this->elementName()} id={$this->elementID()} />";
-    return "
-<div class=clearfix>
+    
+    $classes = array("clearfix");
+    $error = $this->object->errors->errorsFor($this->method);
+    if ($error) {
+      $classes[]= "error";
+      $help = "<br /><span class=help-inline>$error</span>";
+    } else {
+      $help = "";
+    }
+    $classes = implode(" ", $classes);
+    
+    $output = "
+<div class=\"$classes\">
 <div class=input>
 <ul class=inputs-list>
 <li>
 <label>
-<input type=checkbox name={$this->elementName()} id={$this->elementID()} value=1 />
+<input type=checkbox name={$this->elementName()} id={$this->elementID()} value=1";
+    if ($this->value()) {
+      $output .= " checked=checked";
+    }
+    $output .= " />
 <span>$this->label</span>
+$help
 </label>
 </li>
 </ul>
 </div>
-</div>
-";
+</div>";
+    return $output;
   }
 }
 
 class PasswordFieldElement extends FormElement {
-  
-  public function toHTML() {
-    $input =  "<input type=password name={$this->elementName()} id={$this->elementID()} />";
-    return $this->mainWrapper($input);
-  }
 }
 
 class EmailFieldElement extends FormElement {
-  
-  public function toHTML() {
-    $input =  "<input type=email name={$this->elementName()} id={$this->elementID()} />";
-    return $this->mainWrapper($input);
-  }
 }
 
 class TextFieldElement extends FormElement {
-  
-  public function toHTML() {
-    $input =  "<input type=text name={$this->elementName()} id={$this->elementID()} />";
-    return $this->mainWrapper($input);
-  }
-  
 }
 
 
@@ -97,16 +97,69 @@ class FormElement {
   }
 
   public function mainWrapper($html) {
+    $classes = array("clearfix");
+    $error = $this->object->errors->errorsFor($this->method);
+    if ($error) {
+      $classes[]= "error";
+      $help = "<span class=help-inline>$error</span>";
+    } else {
+      $help = "";
+    }
+    $classes = implode(" ", $classes);
+    
     return "
-<div class=clearfix>
+<div class=\"$classes\">
 <label for={$this->elementID()}>{$this->label}</label>
 <div class=input>
 $html
+$help
 </div>
 </div>
 ";
 
   }
+  
+  public function baseTextInput() {
+    $output = "<input type={$this->type} name={$this->elementName()} id={$this->elementID()}";
+    $value = $this->value();
+    if (!empty($value)){
+      $output .= " value={$value}";
+    }
+    $output .= " />";
+    return $output;
+  }
+  
+  public function toHTML() {
+    return $this->mainWrapper($this->baseTextInput());
+  }
+  
+  public function value() {
+    $input = $this->valueFromInput();
+    if ($input){
+      return $input;
+    }
+    $obj = $this->valueFromObject();
+    if ($obj){
+      return $obj;
+    }
+    return "";
+  }
+  
+  public function valueFromInput() {
+    if (array_key_exists($this->object_name, $_REQUEST)) {
+      $main_hash = $_REQUEST[$this->object_name];
+      if (array_key_exists($this->method, $main_hash)) {
+        return $main_hash[$this->method];
+      }
+    }
+    return false;
+  }
+  
+  public function valueFromObject() {
+    $method = $this->method;
+    $this->object->$method;
+  }
+  
   
 }
 
@@ -142,7 +195,6 @@ class FormFieldset {
     return "</fieldset>";
   }
 
-  
 }
 
 class Snippet {
@@ -196,7 +248,19 @@ class FormBuilder {
   }
   
   public function render() {
-    $output = "<form action=$this->action method=$this->method class=$this->class id=$this->id>\n";
+    $output = "<form action=$this->action";
+    if (!$this->method) {
+      $this->method = "post";
+    }
+    $output .= " method=$this->method";
+    if ($this->class){
+      $output .= " class=$this->class";
+    }
+    if ($this->id) {
+      $output .= " id=$this->id";
+    }
+    $output .= " >\n";
+    
     $fieldset_count = count($this->fieldsets);
     $j = 0;
     while($j < $fieldset_count) {

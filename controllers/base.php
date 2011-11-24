@@ -24,6 +24,17 @@ class BaseController {
     header("Location: $return_to");
   }
   
+  function redirect_to($location) {
+    header("Location: $location");
+  }
+  
+  function getCurrentUser() {
+    if (array_key_exists("user", $_SESSION)) {
+      $user = User::findOne(array('_id' => $_SESSION["user"]));
+      return $user;
+    }
+  }
+  
 }
 
 ?>

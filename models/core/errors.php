@@ -20,6 +20,17 @@
       return true;
     }
     
+    public function errorsFor($attribute) {
+      if (array_key_exists($attribute, $this->errors)) {
+        return $this->errors[$attribute][0];
+      }
+      return NULL;
+    }
+    
+    public function inspect() {
+      return $this->errors;
+    }
+    
   }
 
 ?>
