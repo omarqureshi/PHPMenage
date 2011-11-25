@@ -1,7 +1,7 @@
 <?php
 
 class UsersController extends BaseController {
-  
+
   function _new($params=array()) {
     $current_user = self::getCurrentUser();
     if (isset($current_user)){
@@ -9,14 +9,14 @@ class UsersController extends BaseController {
       self::redirect_to("/");
       return;
     }
-    
+
     $presenter = self::initializePresenter(array("page_name" => "Register"));
     $template = "views/users/new.php";
     $right_rail = "views/users/_registration_info.php";
     $user = new User();
     include("views/layouts/application.php");
   }
-  
+
   function _create($params=array()){
     $current_user = self::getCurrentUser();
     if (isset($current_user)){
@@ -24,7 +24,7 @@ class UsersController extends BaseController {
       self::redirect_to("/");
       return;
     }
-    
+
     $user = new User($_POST["user"]);
     if ($user->save()) {
       self::redirect_to("/");
@@ -39,7 +39,7 @@ class UsersController extends BaseController {
       include("views/layouts/application.php");
     }
   }
-  
+
   function _edit($params=array()) {
     $current_user = self::getCurrentUser();
     $user = User::findOne(array('_id' => $params["id"]));
@@ -48,12 +48,11 @@ class UsersController extends BaseController {
       $presenter = self::initializePresenter(array("page_name" => "Register"));
       include("views/layouts/application.php");
     } else {
-      echo "FOO";
+      Flash::addMessage("error", "You do not have access to this page");
+      self::redirect_to("/");
     }
-    
-    
   }
-  
+
 }
 
 ?>

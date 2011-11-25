@@ -1,7 +1,7 @@
 <?php
 
 class AbstractFormElementFactory {
-  
+
   public function build($object, $object_name, $method, $type, $attributes=array()){
     switch($type) {
       case "text":
@@ -18,14 +18,14 @@ class AbstractFormElementFactory {
         break;
     }
   }
-  
+
 }
 
 class CheckboxFieldElement extends FormElement {
-  
+
   public function toHTML() {
     $input =  "<input type=checkbox name={$this->elementName()} id={$this->elementID()} />";
-    
+
     $classes = array("clearfix");
     $error = $this->object->errors->errorsFor($this->method);
     if ($error) {
@@ -35,7 +35,7 @@ class CheckboxFieldElement extends FormElement {
       $help = "";
     }
     $classes = implode(" ", $classes);
-    
+
     $output = "
 <div class=\"$classes\">
 <div class=input>
@@ -69,14 +69,14 @@ class TextFieldElement extends FormElement {
 
 
 class FormElement {
-  
+
   protected $type;
   protected $object;
   protected $method;
   protected $label;
   protected $id;
-  
-  public function __construct($object, $object_name, $method, $type, $attributes=array()) { 
+
+  public function __construct($object, $object_name, $method, $type, $attributes=array()) {
     $this->object = $object;
     $this->object_name = $object_name;
     $this->method = $method;
@@ -106,7 +106,7 @@ class FormElement {
       $help = "";
     }
     $classes = implode(" ", $classes);
-    
+
     return "
 <div class=\"$classes\">
 <label for={$this->elementID()}>{$this->label}</label>
@@ -118,7 +118,7 @@ $help
 ";
 
   }
-  
+
   public function baseTextInput() {
     $output = "<input type={$this->type} name={$this->elementName()} id={$this->elementID()}";
     $value = $this->value();
@@ -128,11 +128,11 @@ $help
     $output .= " />";
     return $output;
   }
-  
+
   public function toHTML() {
     return $this->mainWrapper($this->baseTextInput());
   }
-  
+
   public function value() {
     $input = $this->valueFromInput();
     if ($input){
@@ -144,7 +144,7 @@ $help
     }
     return "";
   }
-  
+
   public function valueFromInput() {
     if (array_key_exists($this->object_name, $_REQUEST)) {
       $main_hash = $_REQUEST[$this->object_name];
@@ -154,22 +154,22 @@ $help
     }
     return false;
   }
-  
+
   public function valueFromObject() {
     $method = $this->method;
-    $this->object->$method;
+    return $this->object->$method;
   }
-  
-  
+
+
 }
 
 class SubmitButton {
   protected $value;
-  
+
   public function __construct($value, $attributes=array()) {
     $this->value = $value;
   }
-  
+
   public function toHTML() {
     $classes = "btn primary";
     return "<input type=submit name=commit value={$this->value} class=\"$classes\">";
@@ -177,10 +177,10 @@ class SubmitButton {
 }
 
 class FormFieldset {
-  
+
   private $element_start_index;
   private $legend;
-  
+
   public function __construct($attributes=array()) {
     $this->element_start_index = $attributes["element_start_index"];
     $this->legend = $attributes["legend"];
@@ -188,7 +188,7 @@ class FormFieldset {
 
   public function startHTML() {
     return "<fieldset><legend>$this->legend</legend>";
-    
+
   }
 
   public function endHTML() {
@@ -199,25 +199,25 @@ class FormFieldset {
 
 class Snippet {
   protected $html;
-  
+
   public function __construct($html) {
     $this->html = $html;
   }
-  
+
   public function toHTML() {
     return $this->html;
   }
 }
 
 class FormBuilder {
-  
+
   private $action;
   private $method;
   private $elements;
   private $fieldsets;
   private $id;
   private $class;
-  
+
   public function __construct($object, $object_name, $action) {
     $this->attributes = array();
     $this->fieldsets = array();
@@ -225,28 +225,28 @@ class FormBuilder {
     $this->object_name = $object_name;
     $this->action = $action;
   }
-  
+
   public function addElement($method, $type, $attributes=array()) {
     $element = AbstractFormElementFactory::build($this->object, $this->object_name, $method, $type, $attributes);
     $this->elements[]= $element;
   }
-  
+
   public function addSubmit($value) {
     $element = new SubmitButton($value);
     $this->elements[]= $element;
   }
-  
+
   public function addFieldSet($attributes=array()) {
     $count = array("element_start_index" => count($this->elements));
     $attr = array_merge($attributes, $count);
     $this->fieldsets[]= new FormFieldset($attr);
   }
-  
+
   public function insertHTML($html){
     $snippet = new Snippet($html);
     $this->elements[]= $snippet;
   }
-  
+
   public function render() {
     $output = "<form action=$this->action";
     if (!$this->method) {
@@ -260,7 +260,7 @@ class FormBuilder {
       $output .= " id=$this->id";
     }
     $output .= " >\n";
-    
+
     $fieldset_count = count($this->fieldsets);
     $j = 0;
     while($j < $fieldset_count) {
@@ -283,7 +283,7 @@ class FormBuilder {
     $output .= "</form>";
     echo $output;
   }
-  
+
 }
 
 ?>

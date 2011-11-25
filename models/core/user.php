@@ -7,18 +7,18 @@
     public $password_confirmation;
     public $crypted_password;
     public $terms_and_conditions;
-    
+
     public function __construct($attributes=array()) {
       parent::__construct($attributes);
-      $this->virtual = array("password", "password_confirmation", "terms_and_conditions");
+      $this->virtual = array("password", "password_confirmation", "current_password", "terms_and_conditions");
     }
-    
+
     public function before_save() {
       if ($this->new_record()) {
-        $this->crypted_password = Bcrypt::hash($this->password);
+        $this->setPassword();
       }
     }
-    
+
     public function validate() {
       parent::validate();
       if (!$this->name) {
@@ -35,27 +35,42 @@
         if ($this->terms_and_conditions != "1") {
           $this->errors->addError("terms_and_conditions", "You need to accept the terms and conditions");
         }
-        
-        if ($this->password) {
-          if ($this->password != $this->password_confirmation) {
-            $this->errors->addError("password_confirmation", "You must confirm your password");
-          }
-        } else {
-          $this->errors->addError("password", "Enter a password");
-        }
-        if (!$this->password_confirmation) {
-          $this->errors->addError("password_confirmation", "Enter a password confirmation");
-        }
-        
+        $this->checkPassword();
       }
+
+      if ($this->persisted()) {
+        if ($this->current_password && $this->password && $this->password_confirmation) {
+          if (Bcrypt::check($this->current_password, $this->crypted_password)) {
+            $this->setPassword();
+            $this->checkPassword();
+          } else {
+            $this->errors->addError("current_password", "Current password is not correct");
+          }
+        }
+      }
+
       return $this->errors->errorFree();
     }
-    
+
+    function setPassword() {
+      $this->crypted_password = Bcrypt::hash($this->password);
+    }
+
+    function checkPassword() {
+      if ($this->password) {
+        if ($this->password != $this->password_confirmation) {
+          $this->errors->addError("password_confirmation", "You must confirm your password");
+        }
+      } else {
+        $this->errors->addError("password", "Enter a password");
+      }
+      if (!$this->password_confirmation) {
+        $this->errors->addError("password_confirmation", "Enter a password confirmation");
+      }
+    }
+
     function authenticate($attributes) {
       $user = User::findOne(array('email' => $attributes['email']));
-      
-      var_dump($user);
-      
       if ($user) {
         if (Bcrypt::check($attributes["password"], $user->crypted_password)) {
           return $user;
@@ -66,7 +81,6 @@
         return NULL;
       }
     }
-    
   }
-  
+
 ?>
