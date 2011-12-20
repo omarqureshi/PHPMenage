@@ -16,7 +16,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.js" type="text/javascript"></script>
     <script src="/assets/javascripts/menage.js" type="text/javascript"></script>
 
-    
+
     <style type="text/css">
       /* Override some defaults */
       html, body {
@@ -48,7 +48,7 @@
         padding: 20px 20px 10px;
         margin: -20px -20px 20px;
       }
-      
+
       /* Give a quick and non-cross-browser friendly divider */
       .content .span4 {
         margin-left: 0;
@@ -59,7 +59,7 @@
       .topbar .btn {
         border: 0;
       }
-      
+
       span.topbar-connector {
         color: #808080;
         line-height: 18px;
@@ -91,7 +91,7 @@
           <div class="pull-right">
             <?php if (isset($current_user)) { ?>
               <ul class="secondary-nav">
-                <li><a href="/users/<?php echo $current_user->id; ?>/edit"><?php echo $current_user->name; ?></a></li>
+                <li><a href="/users/<?php echo $current_user->_id; ?>/edit"><?php echo $current_user->name; ?></a></li>
               </ul>
             <?php } else { ?>
               <form action="/login?return_to=<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
@@ -125,7 +125,7 @@
             <?php } ?>
           <?php } ?>
         </div>
-        
+
         <div class="row">
           <?php if ($presenter["full_width"]) { ?>
             <div class="span16">

@@ -1,7 +1,9 @@
-<?php 
+<?php
 
-$legend = "Register"; 
+$legend = "Register";
 $submit = "Register";
+$url = "/users/";
+$method = "post";
 include("_form.php");
 
 ?>

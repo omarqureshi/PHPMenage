@@ -1,8 +1,43 @@
 <?php
 
+class BasicAbstractFormElementFactory {
+
+  public static function build($type, $name, $value, $attributes=array()) {
+    switch($type) {
+    case "hidden":
+      return new BasicHiddenFieldElement($name, $value, $attributes);
+      break;
+    }
+  }
+
+}
+
+class BasicHiddenFieldElement {
+  protected $name;
+  protected $value;
+  protected $attributes;
+
+
+  public function __construct($name, $value, $attributes) {
+    $this->name = $name;
+    $this->value = $value;
+    $this->attributes = $attributes;
+  }
+
+  public function toHTML() {
+    $input = "<input type=hidden name={$this->name} ";
+    if ($this->value) {
+      $input .= "value={$this->value} ";
+    }
+    $input .= "/>";
+    return $input;
+  }
+}
+
+
 class AbstractFormElementFactory {
 
-  public function build($object, $object_name, $method, $type, $attributes=array()){
+  public static function build($object, $object_name, $method, $type, $attributes=array()){
     switch($type) {
       case "text":
         return new TextFieldElement($object, $object_name, $method, $type, $attributes);
@@ -218,16 +253,34 @@ class FormBuilder {
   private $id;
   private $class;
 
-  public function __construct($object, $object_name, $action) {
-    $this->attributes = array();
+  public function __construct($object, $object_name, $action, $attributes=array()) {
+    $this->attributes = $attributes;
     $this->fieldsets = array();
     $this->object = $object;
     $this->object_name = $object_name;
     $this->action = $action;
+    if (array_key_exists("method", $this->attributes)) {
+      $this->method = $attributes["method"];
+    }
+    if (!$this->method) {
+      $this->method = "post";
+    } else {
+      if ($this->method == "put" || $this->method == "delete") {
+        $this->addBasicElement("hidden", "_method", $this->method, $attributes);
+        $this->method = "post";
+      }
+    }
+
+
   }
 
   public function addElement($method, $type, $attributes=array()) {
     $element = AbstractFormElementFactory::build($this->object, $this->object_name, $method, $type, $attributes);
+    $this->elements[]= $element;
+  }
+
+  public function addBasicElement($type, $name, $value, $attributes=array()) {
+    $element = BasicAbstractFormElementFactory::build($type, $name, $value, $attributes);
     $this->elements[]= $element;
   }
 
@@ -249,9 +302,6 @@ class FormBuilder {
 
   public function render() {
     $output = "<form action=$this->action";
-    if (!$this->method) {
-      $this->method = "post";
-    }
     $output .= " method=$this->method";
     if ($this->class){
       $output .= " class=$this->class";

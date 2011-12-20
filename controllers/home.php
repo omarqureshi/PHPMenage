@@ -1,7 +1,7 @@
 <?php
 
 class HomeController extends BaseController {
-  
+
   function _index($params=array()) {
     $current_user = self::getCurrentUser();
     $presenter = self::initializePresenter();
@@ -9,7 +9,7 @@ class HomeController extends BaseController {
     $presenter["full_width"] = true;
     include("views/layouts/application.php");
   }
-  
+
 }
 
 ?>

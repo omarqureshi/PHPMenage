@@ -5,6 +5,7 @@
     public $email;
     public $password;
     public $password_confirmation;
+    public $current_password;
     public $crypted_password;
     public $terms_and_conditions;
 
@@ -27,7 +28,7 @@
       if (!$this->email) {
         $this->errors->addError("email", "Enter an email address");
       } else {
-        if ($this->collection()->count(array('email' => $this->email)) > 0) {
+        if ($this->collection()->count(array('email' => $this->email), array('_id' => array('$ne' => $this->id))) > 0) {
           $this->errors->addError("email", "This email address has already been used, pick another");
         }
       }
@@ -48,7 +49,6 @@
           }
         }
       }
-
       return $this->errors->errorFree();
     }
 

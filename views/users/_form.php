@@ -1,5 +1,5 @@
 <?php
-  $f = new FormBuilder($user, "user", "/users");
+  $f = new FormBuilder($user, "user", $url, array("method" => $method));
   $f->addFieldSet(array("legend" => $legend, "class" => "hidden"));
   $f->addElement("name", "text");
   $f->addElement("email", "email");
