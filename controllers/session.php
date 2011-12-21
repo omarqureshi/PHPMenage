@@ -14,7 +14,7 @@ class SessionController extends BaseController {
     self::return_to("/");
   }
 
-  function _destroy() {
+  function _destroy($params=array()) {
     $presenter = self::initializePresenter();
     $current_user = self::getCurrentUser();
     if ($current_user) {

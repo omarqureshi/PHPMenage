@@ -57,7 +57,7 @@
   $action = "_" . $r->action;
 
   if ($r->controller_name && $r->action) {
-    $controller_name::$action();
+    $controller_name::$action($r->params);
   } else {
     header("Status: 404 Not Found");
     MaintenanceController::four_oh_four();

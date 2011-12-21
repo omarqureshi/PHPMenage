@@ -110,6 +110,7 @@ class FormElement {
   protected $method;
   protected $label;
   protected $id;
+  protected $attributes;
 
   public function __construct($object, $object_name, $method, $type, $attributes=array()) {
     $this->object = $object;
@@ -118,9 +119,11 @@ class FormElement {
     $this->type = $type;
     if (array_key_exists("label", $attributes)) {
       $this->label = $attributes["label"];
+      unset($attributes["label"]);
     } else {
       $this->label = humanize($this->method);
     }
+    $this->attributes = $attributes;
   }
 
   public function elementID() {
@@ -156,6 +159,11 @@ $help
 
   public function baseTextInput() {
     $output = "<input type={$this->type} name={$this->elementName()} id={$this->elementID()}";
+
+    foreach($this->attributes as $key => $value) {
+      $output .= " $key=\"{$value}\"";
+    }
+
     $value = $this->value();
     if (!empty($value)){
       $output .= " value=\"{$value}\"";
