@@ -27,7 +27,7 @@ class BasicHiddenFieldElement {
   public function toHTML() {
     $input = "<input type=hidden name={$this->name} ";
     if ($this->value) {
-      $input .= "value={$this->value} ";
+      $input .= "value=\"{$this->value}\" ";
     }
     $input .= "/>";
     return $input;
@@ -158,7 +158,7 @@ $help
     $output = "<input type={$this->type} name={$this->elementName()} id={$this->elementID()}";
     $value = $this->value();
     if (!empty($value)){
-      $output .= " value={$value}";
+      $output .= " value=\"{$value}\"";
     }
     $output .= " />";
     return $output;

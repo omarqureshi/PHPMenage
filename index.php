@@ -47,20 +47,20 @@
   }
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $r->map('/login', array('controller' => 'session', 'action' => 'create'));
-    $r->map('/logout', array('controller' => 'session', 'action' => 'destroy'));
+    if ($_POST["_method"] == "DELETE") {
+      $r->map('/logout', array('controller' => 'session', 'action' => 'destroy'));
+    }
   }
-
-
 
   $r->execute();
   $controller_name = ($r->controller_name . "Controller");
   $action = "_" . $r->action;
 
   if ($r->controller_name && $r->action) {
-    $controller_name::$action($r->params);
+    $controller_name::$action();
   } else {
     header("Status: 404 Not Found");
-    MaintenanceController::four_oh_four($r->params);
+    MaintenanceController::four_oh_four();
   }
 
 ?>

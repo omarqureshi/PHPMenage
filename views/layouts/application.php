@@ -91,7 +91,17 @@
           <div class="pull-right">
             <?php if (isset($current_user)) { ?>
               <ul class="secondary-nav">
-                <li><a href="/users/<?php echo $current_user->_id; ?>/edit"><?php echo $current_user->name; ?></a></li>
+                <li><a href="/users/<?php echo $current_user->_id;
+                ?>/edit"><?php echo $current_user->name; ?></a></li>
+                  <li>
+                      <form action="/logout?return_to=<?php echo
+                      $_SERVER["REQUEST_URI"]; ?>" method="post">
+                          <input type="hidden" name="_method"
+                                 value="DELETE" />
+                          <button class="btn"
+                                  type="submit">Logout</button>
+                      </form>
+                  </li>
               </ul>
             <?php } else { ?>
               <form action="/login?return_to=<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
@@ -101,7 +111,7 @@
               </form>
               <span class="topbar-connector"> or </span>
               <ul class="secondary-nav">
-                <li><a href="/users/new">Register</a></li>
+                  <li><a href="/users/new">Register</a></li>
               </ul>
             <?php } ?>
           </div>

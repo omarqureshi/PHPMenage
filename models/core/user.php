@@ -42,8 +42,8 @@
       if ($this->persisted()) {
         if ($this->current_password && $this->password && $this->password_confirmation) {
           if (Bcrypt::check($this->current_password, $this->crypted_password)) {
-            $this->setPassword();
             $this->checkPassword();
+            $this->setPassword();
           } else {
             $this->errors->addError("current_password", "Current password is not correct");
           }
