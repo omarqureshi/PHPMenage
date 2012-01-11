@@ -69,6 +69,7 @@
       }
 
     </style>
+    <link href="/assets/stylesheets/menage.css" rel="stylesheet">
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="/assets/images/favicon.ico">

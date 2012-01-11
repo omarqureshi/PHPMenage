@@ -48,7 +48,7 @@ class UsersController extends BaseController {
       include("views/layouts/application.php");
     } else {
       Flash::addMessage("error", "You do not have access to this page");
-      //      self::redirect_to("/");
+      self::redirect_to("/");
     }
   }
 

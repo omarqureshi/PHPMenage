@@ -16,6 +16,8 @@
   include("models/core/base_mongo.php");
   include("models/core/content.php");
   include("models/core/user.php");
+  include("models/core/news.php");
+  include("models/core/epic.php");
 
   /* Controllers */
 
@@ -24,6 +26,7 @@
   include("controllers/home.php");
   include("controllers/session.php");
   include("controllers/users.php");
+  include("controllers/content.php");
 
   /* Form builder */
 
@@ -31,13 +34,15 @@
 
   /* Router */
 
-  include("config/router.php");
+  include("vendor/php-router/router.php");
 
   $r = new Router();
 
   /* Restful resources */
 
   $r->resources("users");
+  $r->resources("content");
+
 
   /* Custom routes */
 
@@ -62,5 +67,6 @@
     header("Status: 404 Not Found");
     MaintenanceController::four_oh_four();
   }
+
 
 ?>

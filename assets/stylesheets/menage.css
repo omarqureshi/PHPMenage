@@ -1,0 +1,43 @@
+div#about-user {
+    border: 1px solid #ccc;
+    margin-left: 8px;
+    padding: 5px
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 1px 2px 1px #DDD;
+    -webkit-box-shadow: 1px 2px 1px #DDD;
+    box-shadow: 1px 2px 1px #DDD;
+    background-image: linear-gradient(bottom, rgb(105,105,105) 32%, rgb(77,77,77) 66%);
+    background-image: -o-linear-gradient(bottom, rgb(105,105,105) 32%, rgb(77,77,77) 66%);
+    background-image: -moz-linear-gradient(bottom, rgb(105,105,105) 32%, rgb(77,77,77) 66%);
+    background-image: -webkit-linear-gradient(bottom, rgb(105,105,105) 32%, rgb(77,77,77) 66%);
+    background-image: -ms-linear-gradient(bottom, rgb(105,105,105) 32%, rgb(77,77,77) 66%);
+
+    background-image: -webkit-gradient(
+	      linear,
+	      left bottom,
+	      left top,
+	      color-stop(0.32, rgb(105,105,105)),
+	      color-stop(0.66, rgb(77,77,77))
+    );
+}
+
+div#about-user h1 {
+    text-align: right;
+    font-size: 1.2em;
+    color: #FFF;
+    line-height: 1.4em;
+    padding: 5px 10px 5px 5px;
+    margin-bottom: 0px;
+}
+
+div#stats {
+    background-color: #FFF;
+    padding: 10px;
+}
+
+div#new-content-wrapper {
+    padding: 5px;
+    text-align: right;
+}
